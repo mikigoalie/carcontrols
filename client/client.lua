@@ -186,6 +186,12 @@ RegisterCommand('controls', function()
         return
     end
 
+    if opened then
+        SendNUIMessage({ action = 'visibility', data = {
+            display = false
+        }})
+        return
+    end
 
     SendNUIMessage({ action = 'visibility', data = {
         display = true
