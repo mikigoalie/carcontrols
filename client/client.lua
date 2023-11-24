@@ -204,12 +204,41 @@ RegisterCommand('controls', function()
 end)
 
 
+local keybind = lib.addKeybind({
+    name = 'controls',
+    description = 'press G to open car controls menu',
+    defaultKey = 'G',
+    onPressed = function(self)
+        if not uiloaded or not cache.vehicle then
+            return
+        end
+    
+        if opened then
+            SendNUIMessage({ action = 'visibility', data = {
+                display = false
+            }})
+            return
+        end
+    
+        SendNUIMessage({ action = 'visibility', data = {
+            display = true
+        }})
+        
+        SetNuiFocusKeepInput(true)
+        SetNuiFocus(true, true)
+        opened = true
+        CreateThread(windowOpened)
+    end,
+})
+
 lib.onCache('vehicle', function(value)
     if value then
+        keybind:disable(false)
         SendNUIMessage({ action = 'restart'})
         return
     end
 
+    keybind:disable(true)
     if opened then
         SendNUIMessage({ action = 'visibility', data = {
             display = false
